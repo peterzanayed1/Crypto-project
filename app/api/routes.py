@@ -9,7 +9,7 @@ def getdata():
     return {'yee': 'haw'}
 
 
-@api.route('/contacts', methods = ['POST'])
+@api.route('/cars', methods = ['POST'])
 @token_required
 def create_contact(current_user_token):
     make = request.json['make']
@@ -29,7 +29,7 @@ def create_contact(current_user_token):
     response = contact_schema.dump(car)
     return jsonify(response)
 
-@api.route('/contacts', methods = ['GET'])
+@api.route('/cars', methods = ['GET'])
 @token_required
 def get_contact(current_user_token):
     a_user = current_user_token.token
@@ -38,7 +38,7 @@ def get_contact(current_user_token):
     return jsonify(response)
 
 
-@api.route('/contacts/<id>', methods = ['GET'])
+@api.route('/cars/<id>', methods = ['GET'])
 @token_required
 def get_single_contact(current_user_token, id):
     fan = current_user_token
@@ -49,21 +49,21 @@ def get_single_contact(current_user_token, id):
     else:
         return jsonify({'message':'valid token required'}), 401
     
-@api.route('/contacts/<id>', methods = ['POST','PUT'])
+@api.route('/cars/<id>', methods = ['POST','PUT'])
 @token_required
 def update_contact(current_user_token,id):
     contact = Car.query.get(id)
-    contact.name = request.json['name']
-    contact.email = request.json['email']
-    contact.phone_number = request.json['phone_number']
-    contact.address = request.json['address']
+    contact.make = request.json['make']
+    contact.model = request.json['model']
+    contact.year = request.json['year']
+    contact.color = request.json['color']
     contact.user_token = current_user_token.token
 
     db.session.commit()
     response = contact_schema.dump(contact)
     return jsonify(response)
 
-@api.route('/contacts/<id>', methods = ['DELETE'])
+@api.route('/cars/<id>', methods = ['DELETE'])
 @token_required
 def delete_contact(current_user_token,id):
     contact = Car.query.get(id)
