@@ -53,20 +53,20 @@ class User(db.Model, UserMixin):
     
 
 
-class Car(db.Model):
+class Coin(db.Model):
     id = db.Column(db.String, primary_key = True)
-    make = db.Column(db.String(150), nullable = False)
-    model = db.Column(db.String(200))
-    year = db.Column(db.String(20))
-    color = db.Column(db.String(200))
+    coin_symbol = db.Column(db.String(150), nullable = False)
+    amount = db.Column(db.String(200))
+    purchase_price = db.Column(db.String(20))
+    purchase_date = db.Column(db.String(200))
     user_token = db.Column(db.String, db.ForeignKey('user.token'), nullable = False)
 
-    def __init__(self,make,model,year,color,user_token, id = ''):
+    def __init__(self,coin_symbol,amount,purchase_price,purchase_date,user_token, id = ''):
         self.id = self.set_id()
-        self.make = make
-        self.model = model
-        self.year = year
-        self.color = color
+        self.coin_symbol = coin_symbol
+        self.amount = amount
+        self.purchase_price = purchase_price
+        self.purchase_date = purchase_date
         self.user_token = user_token
 
 
@@ -76,9 +76,9 @@ class Car(db.Model):
     def set_id(self):
         return (secrets.token_urlsafe())
 
-class ContactSchema(ma.Schema):
+class CoinSchema(ma.Schema):
     class Meta:
-        fields = ['id', 'make','model','year', 'color',]
+        fields = ['coin_symbol', 'amount','purchase_price','purchase_date', 'color',]
 
-contact_schema = ContactSchema()
-contacts_schema = ContactSchema(many=True)
+coin_schema = CoinSchema()
+coins_schema = CoinSchema(many=True)
