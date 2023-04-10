@@ -78,7 +78,7 @@ class Coin(db.Model):
 
 class CoinSchema(ma.Schema):
     class Meta:
-        fields = ['coin_symbol', 'amount','purchase_price','purchase_date', 'color',]
+        fields = ['coin_symbol', 'amount','purchase_price','purchase_date', 'id',]
 
 coin_schema = CoinSchema()
 coins_schema = CoinSchema(many=True)

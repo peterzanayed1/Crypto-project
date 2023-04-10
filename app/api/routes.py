@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, render_template
 from helpers import token_required
 from models import db, User, Coin, coin_schema, coins_schema
+import requests
+
 
 api = Blueprint('api',__name__, url_prefix='/api')
 
@@ -33,10 +35,9 @@ def create_contact(current_user_token):
 @token_required
 def get_contact(current_user_token):
     a_user = current_user_token.token
-    coins = Coin.query.filter_by(user_token = a_user).all()
-    response = coins_schema.dump(coins)
+    contacts = Coin.query.filter_by(user_token = a_user).all()
+    response = coins_schema.dump(contacts)
     return jsonify(response)
-
 
 @api.route('/coins/<id>', methods = ['GET'])
 @token_required
@@ -71,3 +72,29 @@ def delete_contact(current_user_token,id):
     db.session.commit()
     response = coin_schema.dump(coin)
     return jsonify(response)
+
+
+
+@api.route('/prices', methods=['GET'])
+def get_prices():
+    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': '3b1418e5-aec7-4add-921e-4c65d1598c95'
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    prices = {}
+
+    for coin in data['data']:
+        name = coin['name']
+        symbol = coin['symbol']
+        price = coin['quote']['USD']['price']
+        prices[symbol] = {'name': name, 'price': price}
+
+    return jsonify(prices)
+
+if __name__ == '__main__':
+    api.run(debug=True)
+
