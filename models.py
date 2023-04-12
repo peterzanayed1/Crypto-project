@@ -82,3 +82,39 @@ class CoinSchema(ma.Schema):
 
 coin_schema = CoinSchema()
 coins_schema = CoinSchema(many=True)
+
+class Closedtrans(db.Model):
+    id = db.Column(db.String, primary_key = True)
+    coin_symbol = db.Column(db.String(150), nullable = False)
+    amount = db.Column(db.String(200))
+    purchase_price = db.Column(db.String(20))
+    purchase_date = db.Column(db.String(200))
+    sale_price = db.Column(db.String(200))
+    sale_date = db.Column(db.String(200))
+    holding_time = db.Column(db.String(200))
+    profit = db.Column(db.String(200))
+   
+    def __init__(self,coin_symbol,amount,purchase_price,purchase_date,sale_date,sale_price,holding_time,profit, id = ''):
+        self.id = self.set_id()
+        self.coin_symbol = coin_symbol
+        self.amount = amount
+        self.purchase_price = purchase_price
+        self.purchase_date = purchase_date
+        self.sale_date = sale_date
+        self.sale_price=sale_price
+        self.holding_time = holding_time
+        self.profit = profit
+
+
+    def __repr__(self):
+        return f'The following contact has been added to the phonebook: {self.make} models.py'
+
+    def set_id(self):
+        return (secrets.token_urlsafe())
+
+class closedtransSchema(ma.Schema):
+    class Meta:
+        fields = ['coin_symbol', 'amount','purchase_price','purchase_date','sale_date','holding_time','profit', 'id',]
+
+closedtrans_schema = closedtransSchema()
+closedtranss_schema = closedtransSchema(many=True)
